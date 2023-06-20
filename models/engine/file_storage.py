@@ -17,7 +17,7 @@ class FileStorage:
         type_objects = {}
         for key, value in self.__objects.items():
             if isinstance(value, cls):
-                type_objects[key] = obj
+                type_objects[key] = value
         return type_objects
 
     def new(self, obj):
