@@ -16,7 +16,7 @@ class FileStorage:
             cls = eval(cls)
         type_objects = {}
         for key, value in self.__objects.items():
-            if isinstance(obj, cls):
+            if isinstance(value, cls):
                 type_objects[key] = obj
         return type_objects
 
