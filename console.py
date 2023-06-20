@@ -125,7 +125,7 @@ class HBNBCommand(cmd.Cmd):
         new_instance = HBNBCommand.classes[new_args[0]]()
         for i in new_args[1:]:
             key_val = i.split("=")
-            if len(key_val) != 2: #edited
+            if len(key_val) != 2:
                 continue
             key = key_val[0]
             value = key_val[1]
