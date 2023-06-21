@@ -2,16 +2,14 @@
 """ Console Module """
 import cmd
 import sys
-from shlex import split
 from models.base_model import BaseModel
-from models import storage
+from models.__init__ import storage
 from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-
 
 
 class HBNBCommand(cmd.Cmd):
@@ -116,33 +114,31 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def do_create(self, args):
-        """Create an object of any class"""
-        try:
-            if not args:
-                raise SyntaxError()
-            new_args = args.split(" ")
-            kwargs = {}
-            for i in range(1, len(new_args)):
-                key_value = tuple(new_args[i].split("="))
-                if value[0] == '"':
-                    value = value.strip('"').replace("_", " ")
-                else:
-                    try:
-                        value = eval(value)
-                    except (SyntaxError, NameError):
-                        continue
-                kwargs[key] = value
-            if kwargs == {}:
-                obj = eval(new_args[0])()
-            else:
-                obj = eval(new_args[0])(**kwargs)
-                storage.new(obj)
-            print(obj.id)
-            storage.save()
-        except SyntaxError:
+        """ Create an object of any class"""
+        new_args = args.split()
+        if not args:
             print("** class name missing **")
-        except NameError:
+            return
+        elif new_args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
+            return
+            new_instance = HBNBCommand.classes[new_args[0]]()
+        for i in new_args[1:]:
+            key_val = i.split("=")
+            key = key_val[0]
+            value = key_val[1]
+            if (hasattr(new_instance, key)):
+                value = value.replace("_", " ")
+                try:
+                    value = eval(value)
+                except Exception as e:
+                    pass
+                setattr(new_instance, key, value)
+        storage.save()
+        attr = new_instance.__dict__
+        print(attr)
+        print(new_instance.id)
+        storage.save()
 
     def help_create(self):
         """Help information for the create method"""
