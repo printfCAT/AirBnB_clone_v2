@@ -2,8 +2,9 @@
 """ Console Module """
 import cmd
 import sys
+from shlex import split
 from models.base_model import BaseModel
-from models.__init__ import storage
+from models import storage
 from models.user import User
 from models.place import Place
 from models.state import State
@@ -141,11 +142,11 @@ class HBNBCommand(cmd.Cmd):
         except SyntaxError:
             print("** class name missing **")
         except NameError:
-            print("** class doesn't exist **"
+            print("** class doesn't exist **")
 
     def help_create(self):
-        """ Help information for the create method """
-        print("Creates a class of any type")
+        """Help information for the create method"""
+        print("Creates an instance of a class")
         print("[Usage]: create <className>\n")
 
     def do_show(self, args):
