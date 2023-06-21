@@ -12,7 +12,6 @@ from models.amenity import Amenity
 from models.review import Review
 
 
-
 class HBNBCommand(cmd.Cmd):
     """ Contains the functionality for the HBNB console"""
 
@@ -123,29 +122,18 @@ class HBNBCommand(cmd.Cmd):
         elif new_args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[new_args[0]]()
+            new_instance = HBNBCommand.classes[new_args[0]]()
         for i in new_args[1:]:
             key_val = i.split("=")
-            if len(key_val) != 2:
-                continue
             key = key_val[0]
             value = key_val[1]
-            value = value.replace("_", " ")
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1]
-            elif "." in value:
+            if (hasattr(new_instance, key)):
+                value = value.replace("_", " ")
                 try:
-                    value = float(value)
-                except ValueError:
-                    continue
-            else:
-                try:
-                    value = int(value)
-                except ValueError:
-                    continue
-            if hasattr(new_instance, key):
+                    value = eval(value)
+                except Exception as e:
+                    pass
                 setattr(new_instance, key, value)
-
         storage.save()
         attr = new_instance.__dict__
         print(attr)
@@ -153,8 +141,8 @@ class HBNBCommand(cmd.Cmd):
         storage.save()
 
     def help_create(self):
-        """ Help information for the create method """
-        print("Creates a class of any type")
+        """Help information for the create method"""
+        print("Creates an instance of a class")
         print("[Usage]: create <className>\n")
 
     def do_show(self, args):
