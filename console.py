@@ -116,39 +116,32 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """Create an object of any class"""
-        new_args = args.split(" ")
-        if not args:
-            print("** class name missing **")
-            return
-        elif new_args[0] not in HBNBCommand.classes:
-            print("** class doesn't exist **")
-            return
-        kwargs = {}
-        for i in range(1, len(new_args)):
-            key_value = new_args[i].split("=")
-            if len(key_value) != 2:
-                continue
-            key, value = key_value
-            if value[0] == '"' and value[-1] == '"':
-                value = value[1:-1].replace("_", " ")
-            elif "." in value:
-                try:
-                    value = float(value)
-                except ValueError:
-                    continue
+        try:
+            if not args:
+                raise SyntaxError()
+            new_args = args.split(" ")
+            kwargs = {}
+            for i in range(1, len(new_args)):
+                key_value = tuple(new_args[i].split("="))
+                if value[0] == '"':
+                    value = value.strip('"').replace("_", " ")
+                else:
+                    try:
+                        value = eval(value)
+                    except (SyntaxError, NameError):
+                        continue
+                kwargs[key] = value
+            if kwargs == {}:
+                obj = eval(new_args[0])()
             else:
-                try:
-                    value = int(value)
-                except ValueError:
-                    continue
-            kwargs[key] = value
-        if kwargs:
-            obj = HBNBCommand.classes[new_args[0]](**kwargs)
-            storage.new(obj)
-        else:
-            obj = HBNBCommand.classes[new_args[0]]()
-        print(obj.id)
-        storage.save()
+                obj = eval(new_args[0])(**kwargs)
+                storage.new(obj)
+            print(obj.id)
+            storage.save()
+        except SyntaxError:
+            print("** class name missing **")
+        except NameError:
+            print("** class doesn't exist **"
 
     def help_create(self):
         """ Help information for the create method """
