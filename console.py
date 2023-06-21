@@ -115,40 +115,32 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, args):
         """ Create an object of any class"""
-        new_args = args.split()
+        new_args = args.split(" ")
         if not args:
             print("** class name missing **")
             return
         elif new_args[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
-        new_instance = HBNBCommand.classes[new_args[0]]()
-        for i in new_args[1:]:
-            key_val = i.split("=")
-            if len(key_val) != 2:
-                continue
-            key = key_val[0]
-            value = key_val[1]
-            value = value.replace("_", " ")
-            if value.startswith('"') and value.endswith('"'):
-                value = value[1:-1]
-            elif "." in value:
-                try:
-                    value = float(value)
-                except ValueError:
-                    continue
+        kwargs = {}
+        for i in range(1, len(new_args)):
+            key, value = tuple(new_args[i].split("="))
+            if value[0] == '"':
+                value = value.strip('"').replace("_", " ")
             else:
                 try:
-                    value = int(value)
-                except ValueError:
+                    value = eval(value)
+                except (SyntaxError, NameError):
+                    print("** class name missing **")
+                    print("** class doesn't exist **")
                     continue
-            if hasattr(new_instance, key):
-                setattr(new_instance, key, value)
-
-        storage.save()
-        attr = new_instance.__dict__
-        print(attr)
-        print(new_instance.id)
+            kwargs[key] = value
+        if kwargs == {}:
+            obj = eval(new_args[0])()
+        else:
+            obj = eval(new_args[0])(**kwargs)
+            storage.new(obj)
+        print(obj.id)
         storage.save()
 
     def help_create(self):
