@@ -4,6 +4,7 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
 from os import getenv
+from sqlalchemy.orm import relationship
 
 
 class City(BaseModel, Base):
@@ -15,3 +16,5 @@ class City(BaseModel, Base):
         state = relationship('state', back_populates='cities')
     else:
         name = ""
+
+    places = relationship("Place", back_populates="cities", cascade="all, delete")
