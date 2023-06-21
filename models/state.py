@@ -3,24 +3,28 @@
 from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship
-from models import storage
+import models
+from os import getenv
 
 
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'
 
-    name = Column(String(128), nullable=False)
-    cities = relationship('City', back_populates='state',
-                          cascade='all, delete')
+    if getenv('HBNB_TYPE_STORAGE') == 'db':
 
-    @property
-    def cities(self):
-        """ Return a list of cities associated with current state instance """
-        list_cities = []
+        name = Column(String(128), nullable=False)
+        cities = relationship('city', back_populates='state',
+                              cascade='all, delete')
+    else:
 
-        for city in storage.all("city").values():
-            if city.state_id == self.id:
-                list_cities.append(city)
+        @property
+        def cities(self):
+            """ get a list of cities associated with current state instance """
+            list_cities = []
 
-        return list_cities
+            for city in models.storage.all("city").values():
+                if city.state_id == self.id:
+                    list_cities.append(city)
+
+            return list_cities
