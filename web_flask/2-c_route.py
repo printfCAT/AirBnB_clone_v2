@@ -22,7 +22,8 @@ def hbnb():
 @app.route("/c/<text>", strict_slashes=False)
 def ctext(text):
     """ prints C followed by respective text """
-    return("C {}".format(text))
+    text_with_spaces = text.replace("_", " ")
+    return("C {}".format(text_with_spaces))
 
 
 if __name__ == "__main__":
