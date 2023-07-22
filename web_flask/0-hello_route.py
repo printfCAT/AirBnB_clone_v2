@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-""" define a class """
+""" define a function """
 
 
 from flask import Flask
