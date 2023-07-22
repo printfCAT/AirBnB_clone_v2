@@ -54,9 +54,11 @@ def oddeven(n):
     title = "HBNB"
     H1 = n
     if n % 2 == 0:
-        return render_template("6-number_odd_or_even.html", title=title, H1=H1, evenodd="even")
+        return render_template("6-number_odd_or_even.html",\
+                               title=title, H1=H1, evenodd="even")
     else:
-        return render_template("6-number_odd_or_even.html", title=title, H1=H1, evenodd="odd")
+        return render_template("6-number_odd_or_even.html",\
+                               title=title, H1=H1, evenodd="odd")
 
 
 if __name__ == "__main__":
