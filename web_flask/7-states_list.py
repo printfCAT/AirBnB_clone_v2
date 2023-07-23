@@ -18,12 +18,11 @@ def states_list():
 
 
 @app.teardown_appcontext
-def teardown_appcontext(exception):
+def teardown_appcontext(exception=None):
     """ remove the current SQLAlchemy Session after each request """
     storage.close()
 
 
 if __name__ == "__main__":
     """ main function """
-    app.url_map.strict_slashes = False
     app.run(host="0.0.0.0", port=5000)
